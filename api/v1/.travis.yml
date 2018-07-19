@@ -1,0 +1,25 @@
+language: python
+python:
+  - "3.4"
+  - "3.7"
+services:
+  
+# command to install dependencies
+install:
+  - "pip install -r requirements.txt"
+  - "pip install coveralls"
+# command to run tests
+before_script:
+
+script:
+  - nosetests --with-coverage
+branches:
+  only:
+  
+  - kamar_diary
+  - master
+after_success:
+  - coveralls
+env:
+
+  - FLASK_APP=app.py
