@@ -5,7 +5,7 @@ from versions.v1.models import User, db, entries
 
 
 class TestEntriesV1(unittest.TestCase):
-    def setUp(self):
+    def test_setUp(self):
         app.config.from_object('config.Testing')
         self.app = app.test_client()
         self.new_entries_info = {
