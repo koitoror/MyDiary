@@ -15,7 +15,7 @@ script:
   - nosetests --with-coverage
 branches:
   only:
-  
+  - develop
   - kamar_diary
   - master
 after_success:
