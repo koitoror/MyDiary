@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, abort, request, make_response, url_for
+from flask import Flask, jsonify, abort, render_template, request, make_response, url_for
 from flask.ext.httpauth import HTTPBasicAuth
 
 app = Flask(__name__, static_url_path = "")
@@ -7,8 +7,8 @@ auth = HTTPBasicAuth()
 
 @app.route('/')
 def index():
-    #return render_template('index.html')
-    return 'Hello, World'
+    return render_template('index.html')
+    #return 'Hello, World'
 @auth.get_password
 def get_password(username):
     if username == 'Admin':
