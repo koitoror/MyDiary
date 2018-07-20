@@ -1,119 +1,111 @@
-from flask import Flask, request, jsonify, make_response
-from flask_sqlalchemy import SQLAlchemy
-import uuid
-from werkzeug.security import generate_password_hash, check_password_hash
-import jwt
-import datetime
-from functools import wraps
+#!flask/bin/python
+from flask import Flask, jsonify, abort, request, make_response, url_for
+from flask.ext.httpauth import HTTPBasicAuth
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = "")
+auth = HTTPBasicAuth()
 
-@app.route('/entries', methods=['GET'])
-#@token_required
+@app.route('/')
+def index():
+    #return render_template('index.html')
+    return 'Hello, World'
+@auth.get_password
+def get_password(username):
+    if username == 'Admin':
+        return '12345'
+    return None
+
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
+    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
+    
+@app.errorhandler(400)
+def not_found(error):
+    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify( { 'error': 'Not found' } ), 404)
+
+entries = [
+    {
+        'id': 1,
+        'title': u'Buy groceries',
+        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
+        'done': False
+    },
+    {
+        'id': 2,
+        'title': u'Learn Python',
+        'description': u'Need to find a good Python tutorial on the web', 
+        'done': False
+    }
+]
+
+def make_public_entries(entries):
+    new_entries = {}
+    for field in entries:
+        if field == 'id':
+            new_entries['uri'] = url_for('get_entries', entryId = entries['id'], _external = True)
+        else:
+            new_entries[field] = entries[field]
+    return new_entries
+    
+@app.route('/entries', methods = ['GET'])
+@auth.login_required
 def get_all_entries():
-    """
-    entries = entries.query.filter_by(user_id=current_user.id).all()
+    return jsonify( { 'entries': map(make_public_entries, entries) } )
 
-    output = []
+@app.route('/entries/<int:entryId>', methods = ['GET'])
+@auth.login_required
+def get_one_entry(entryId):
+    entries = filter(lambda t: t['id'] == entryId, entries)
+    if len(entries) == 0:
+        abort(404)
+    return jsonify( { 'entries': make_public_entries(entries[0]) } )
 
-    for entries in entries:
-        entries_data = {}
-        entries_data['id'] = entries.id
-        entries_data['date'] = entries.datetime
-        entries_data['title'] = entries.title
-        entries_data['text'] = entries.text
-        entries_data['modify'] = entries.modify
-        output.append(entries_data)
-
-    return jsonify({'entries' : output})
-    """
-
-    return jsonify({'message' : 'all entries fetched!'})
-
-@app.route('/entries/<entryId>', methods=['GET'])
-#@token_required
-def get_one_entries():
-    """
-    entries = entries.query.filter_by(id=entryId, user_id=current_user.id).first()
-
-    if not entries:
-        return jsonify({'message' : 'No entries found!'})
-
-    entries_data = {}
-    entries_data['id'] = entries.id
-    entries_data['text'] = entries.text
-    entries_data['modify'] = entries.modify
-
-    return jsonify(entries_data)
-    """
-
-    data = request.get_json()
-
-    datetime = data ['date']
-    title = data['title']
-    text = data['text']
-    entryId = data['entryId']
-
-    return jsonify({'message' : 'single entry fetched!',  "date": datetime, 'title': title, 'text': text, 'entryId': entryId[0]})
-
-@app.route('/entries', methods=['POST', 'GET'])
-#@token_required
+@app.route('/entries', methods = ['POST'])
+@auth.login_required
 def create_entries():
-    """
-    new_entries = entries(text=data['text'], modify=False, user_id=current_user.id)
-    db.session.add(new_entries)
-    db.session.commit()
-    """
+    if not request.json or not 'title' in request.json:
+        abort(400)
+    entries = {
+        'id': entries[-1]['id'] + 1,
+        'title': request.json['title'],
+        'description': request.json.get('description', ""),
+        'done': False
+    }
+    entries.append(entries)
+    return jsonify( { 'entries': make_public_entries(entries) } ), 201
 
-    data = request.get_json()
-
-    datetime = data ['date']
-    title = data['title']
-    text = data['text']
-    entryId = data['entryId']
-
-    return jsonify({"message" : "entry created!", "date": datetime, 'title': title, 'text': text, 'entryId': entryId[1]})
-
-@app.route('/entries/<entryId>', methods=['PUT'])
-#@token_required
-def modify_entries():
-    """
-    entries = entries.query.filter_by(id=entryId, user_id=current_user.id).first()
-
-    if not entries:
-        return jsonify({'message' : 'No entries found!'})
-
-    entries.modify = True
-    db.session.commit()
-    """
-    data = request.get_json()
-
-    datetime = data ['date']
-    title = data['title']
-    text = data['text']
-    entryId = data['entryId']
-    return jsonify({'message' : 'entry item has been modified!',  "date": datetime, 'title': title, 'text': text, 'entryId': entryId[2]})
-
-@app.route('/entries/<entryId>', methods=['DELETE'])
-#@token_required
-def delete_entries():
-    """
-    entries = entries.query.filter_by(id=entryId, user_id=current_user.id).first()
-
-    if not entries:
-        return jsonify({'message' : 'No entries found!'})
-
-    db.session.delete(entries)
-    db.session.commit()
-    """
-
-    data = request.get_json()
-
-    datetime = data ['date']
-    title = data['title']
-    text = data['text']
-    entryId = data['entryId']
-    return jsonify({'message' : 'entries item deleted!',  "date": datetime, 'title': title, 'text': text, 'entryId': entryId[3]})
-
+@app.route('/entries/<int:entryId>', methods = ['PUT'])
+@auth.login_required
+def update_entries(entryId):
+    entries = filter(lambda t: t['id'] == entryId, entries)
+    if len(entries) == 0:
+        abort(404)
+    if not request.json:
+        abort(400)
+    if 'title' in request.json and type(request.json['title']) != unicode:
+        abort(400)
+    if 'description' in request.json and type(request.json['description']) is not unicode:
+        abort(400)
+    if 'done' in request.json and type(request.json['done']) is not bool:
+        abort(400)
+    entries[0]['title'] = request.json.get('title', entries[0]['title'])
+    entries[0]['description'] = request.json.get('description', entries[0]['description'])
+    entries[0]['done'] = request.json.get('done', entries[0]['done'])
+    return jsonify( { 'entries': make_public_entries(entries[0]) } )
+    
+@app.route('/entries/<int:entryId>', methods = ['DELETE'])
+@auth.login_required
+def delete_entries(entryId):
+    entries = filter(lambda t: t['id'] == entryId, entries)
+    if len(entries) == 0:
+        abort(404)
+    entries.remove(entries[0])
+    return jsonify( { 'result': True } )
+    
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug = True)
