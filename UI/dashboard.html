@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang= "en" >
+    <head>
+        <meta charset="utf-8">
+        <title>MyDiary | Dashboard</title>
+
+         <!-- Custom styles -->
+         <link rel="stylesheet" href="css/style.css">
+     </head>
+    <body>
+        <header class="bg-dark">
+            <div class="text-center">
+                <div class="container">
+                    <h1>Welcome</h1>
+                    <p>MyDiary App</p>
+                </div>
+            </div>
+            <nav role="navigation">
+                <div class="container">
+                    <ul>
+                        <li class="active"><a href=index.html>Home</a></li>
+                        <li><a href=dashboard.html>Dashboard</a></li>
+                        <li><a href=login.html>Login</a></li>
+                        <li><a href=signup.html>SignUp</a></li>
+                        <li class="float-right"><a href=login.html>Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+    <section id="dashboard">
+        <div class="container">
+            <h2>Dashboard, <small>Allan Imire</small></h2><hr>
+            <div class="container" id="avatar">
+                <img src="img/ediary.png" alt="Image">
+            </div>
+            <div>
+                <p><b>Diary Entries: </b>(3)</p>
+                <!-- button that triggers the modal -->
+                <p><b><a class="button bg-dark" id="btn" href="#">Reminder Settings</a></b></p>
+
+                <!-- the modal menu -->
+                <div id="myModal" class="modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <legend>Notifications</legend>
+                        <form class="myForm">
+                            <div class="form-group">
+                                <label for="date">Set Reminder</label>
+                                <input id="date" type="datetime-local" class="form-control">
+                            </div>
+                            <input class="button bg-dark" type="submit" value="set">                    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section>
+        <div class="container">
+            <div>
+                <a href="addEntry.html" class="button bg-dark float-right">Add Entry</a>
+            </div>
+            <legend>Diary Entries</legend>
+        <div>
+            <table class="table">
+                <tr>
+                  <th>#</th>
+                  <th>title</th>
+                  <th>Details</th>
+                  <th>Date Created</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/></td>
+                    <td>Developing</td>
+                    <td><a href="contents.html">view contents</a></td>
+                    <td>28-08-2017</td>
+                    <td><a class="button bg-dark float-right" href="editEntry.html">edit</a></td>
+                    <td><a class="button button1 float-right" href="#">delete</a></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/></td>
+                    <td>Researching</td>
+                    <td><a href="contents.html">view contents</a></td>
+                    <td>28-08-2017</td>
+                    <td><a class="button bg-dark float-right" href="editEntry.html">edit</a></td>
+                    <td><a class="button button1 float-right" href="contents.html">delete</a></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/></td>
+                    <td>Testing</td>
+                    <td><a href="contents.html">view contents</a></td>
+                    <td>28-08-2017</td>
+                    <td><a class="button bg-dark float-right" href="editEntry.html">edit</a></td>
+                    <td><a class="button button1 float-right" href="contents.html">delete</a></td>
+                </tr>
+            </table>
+            </div>
+          </div>
+   
+        </div>
+    </section>
+     <footer class="text-center bg-dark">
+        <p>
+            MyDiary, Copyright &copy; 2018
+        </p>
+    </footer>
+    <script src="js/main.js"></script>
+    
+</body>
+</html>
