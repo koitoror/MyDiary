@@ -155,9 +155,6 @@ input[type="submit"]:focus {
 	border: solid steelblue;
 	background: white;
 	color: steelblue;
-
-input: focus {
-	background: white;
 }
 
 input[type="radio"]:checked +label {
