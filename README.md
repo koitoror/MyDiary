@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/koitoror/MyDiary.svg?branch=develop)](https://travis-ci.org/koitoror/MyDiary)[![Coverage Status](https://coveralls.io/repos/github/koitoror/MyDiary/badge.svg?branch=master)](https://coveralls.io/github/koitoror/MyDiary?branch=master)
+[![Build Status](https://travis-ci.org/koitoror/MyDiary.svg?branch=develop)](https://travis-ci.org/koitoror/MyDiary)
+[![Coverage Status](https://coveralls.io/repos/github/koitoror/MyDiary/badge.svg?branch=develop)](https://coveralls.io/github/koitoror/MyDiary?branch=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dfd1f513767a4227aa2202c14a7f4c59)](https://www.codacy.com/app/koitoror/MyDiary?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=koitoror/MyDiary&amp;utm_campaign=Badge_Grade)
 
 # MyDiary
