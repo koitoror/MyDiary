@@ -66,7 +66,7 @@ class User:
         return None
 
 
-class diary:
+class Diary:
     """
     diary class
     """

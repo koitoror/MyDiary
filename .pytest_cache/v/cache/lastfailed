@@ -1,0 +1,12 @@
+{
+  "tests/__pycache__/test_application_routes.py::TestApplicationRoutes::test_sign_up_page_loads": true,
+  "tests/__pycache__/test_application_routes.py::TestApplicationRoutes::test_sign_up_page_status_code": true,
+  "tests/__pycache__/test_application_routes.py::TestApplicationRoutes::test_user_can_login": true,
+  "tests/__pycache__/test_application_routes.py::TestApplicationRoutes::test_user_login_ing_does_not_exist_credentials": true,
+  "tests/__pycache__/test_application_routes.py::TestApplicationRoutes::test_user_passwords_do_not_match_during_sign_up": true,
+  "tests/test_diary.py::TestUserdiary::test_a_diary_is_returned_when_an_id_is_specified": true,
+  "tests/test_diary.py::TestUserdiary::test_a_diary_is_successfully_deleted": true,
+  "tests/test_diary.py::TestUserdiary::test_a_diary_is_updated": true,
+  "tests/test_diary.py::TestUserdiary::test_user_can_create_diary": true,
+  "tests/test_diary.py::TestUserdiary::test_user_diary_already_exists": true
+}

@@ -5,7 +5,7 @@ from app.models import diaryItem
 
 class TestdiaryItems(unittest.TestCase):
     def setUp(self):
-        self.diary = diary("AZXDJSA", "Hey")
+        self.diary = diary("Lorem ipsum dolor", "Hey")
 
     def test_user_can_create_diary(self):
         item = diaryItem('XZBNVLK', 'Kampala', 'Find Baganda', '2018-07-27')

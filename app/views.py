@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 from app import app
 from app.application import Application
 from app.models import User
-from app.models import diary
+from app.models import Diary
 from app.models import diaryItem
 
 application = Application()
@@ -78,7 +78,7 @@ def mydiary():
         return redirect(url_for('login'))
     if request.method == 'POST':
         name = request.form['name']
-        if user.create_diary(diary(application.generate_random_key(), name)):
+        if user.create_diary(Diary(application.generate_random_key(), name)):
             flash("You have successfully added a diary")
             return redirect(url_for('mydiary'))
         error = "Could not create the diary, it already exists"
