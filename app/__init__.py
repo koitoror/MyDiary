@@ -1,16 +1,13 @@
-from flask_restplus import Api
-from flask import Blueprint
+from flask import Flask
 
-from .apis.controller.entries_controller import api as entries_ns
+# Initialize the application
+app = Flask(__name__, instance_relative_config=True)
 
-blueprint = Blueprint('api', __name__)
+# Load the views
+from app import views
 
-api = Api(
-    blueprint,
-    title='MyDiary',
-    doc='/api/documentation',
-    version='1.0',
-    description='MyDiary is an online journal where users can pen down their thoughts and feelings.'
-)
+# Linking the configuration file
+app.config.from_object('config.BaseConfig')
 
-api.add_namespace(entries_ns, path='/api/v1')
+
+
