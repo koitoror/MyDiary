@@ -34,8 +34,7 @@ Run `index.html` file in your browser
 
 UI link to gh-pages
 ```
-https://koitoror.github.io/MyDiary/designs/UI
-```
+https://koitoror.github.io/UI/```
 
 
 ## API Installation

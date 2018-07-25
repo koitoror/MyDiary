@@ -17,7 +17,6 @@ script:
 branches:
   only:
   - develop
-  - kamar_diary
   - master
 after_success:
   - coveralls
