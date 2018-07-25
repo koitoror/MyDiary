@@ -1,72 +1,62 @@
-from flask import render_template, request, redirect, url_for, session, flash
+from flask import Flask, jsonify, request, abort
 from app import app
 from app.models import Diary
 from app.models import diaryItem
 
-@app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
-def diaryitems(entry_id):
-    """
-    Route to show and create diary items.
-    :param entry_id: 
-    :return: 
-    """
-    if request.method == 'POST':
-        if request.form['name']:
-            if Diary.create_item(
-                    diaryItem(application.generate_random_key(), request.form['name'], request.form['description'],
-                               request.form['deadline'])):
-                flash("You have successfully added an Item to the diary")
-                return redirect(url_for('diaryitems', entry_id=entry_id))
-        error = "Item cannot be created"
-    return render_template('mydiaryitem.html', error=error, diary=diary, user=user)
 
+entryDB=[
+ {
+ 'entry_id':'1',
+ 'title':'Hello',
+ 'body':'Greetings To Start Off My Diary Postings'
+ },
+ {
+ 'entry_id':'2',
+ 'title':'Hey',
+ 'body':'My Second Entry Ever'
+ }
+ ]
+ 
+@app.route('/api/v1/entries/',methods=['GET'])
+def getAllEntries():
+    return jsonify({'entries':entryDB, 'message': 'All entries viewed.'}), 200
 
-@app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
-def edititem(entry_id):
-    """
-    Route to edit an item specified by the Id
-    :param entry_id: 
-    :param entry_id: 
-    :return: 
-    """
+@app.route('/api/v1/entries/<int:entry_id>',methods=['GET'])
+def getEntry(entry_id):
+    usr = []
+    usr = [ entry for entry in entryDB if (entry['entry_id'] == entry_id) ] 
+    return jsonify({'entry':usr, 'message': 'Entry viewed.'}), 200
 
-    item = Diary.get_item(entry_id)
-    if not item:
-        return redirect(url_for('mydiary'))
+@app.route('/api/v1/entries/<int:entry_id>',methods=['POST'])
+def createEntry():
+    dat = {
+    'entry_id':request.json['entry_id'],
+    'title':request.json['title'],
+    'body':request.json['body']
+    }
+    entryDB.append(dat)
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    r = request.post(url, data=json.dumps(data), headers=headers)
 
-    if request.method == 'POST':
-        if request.form['name'] and request.form['description'] and request.form['deadline']:
-            if Diary.update_item(entry_id, request.form['name'], request.form['description'],
-                                  request.form['deadline']):
-                flash("You have successfully updated your Item in the diary")
-                return redirect(url_for('diaryitems', entry_id=entry_id))
-    return render_template('modifyitem.html', diary=diary, item=item)
+    return jsonify(dat, {'message': 'Entry created.'}), 201
 
+@app.route('/api/v1/entries/<int:entry_id>',methods=['PUT'])
+def updateEntry(entry_id):
 
-@app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
-def deleteitem(entry_id):
-    """
-    Route to delete an item from a diary specified by the Id.
-    :param entry_id: 
-    :param entry_id: 
-    :return: 
-    """
-    item = Diary.get_item(entry_id)
-    if not item:
-        return redirect(url_for('mydiary'))
+    em = [ entry for entry in entryDB if (entry['entry_id'] == entry_id) ]
+    if 'title' in request.json : 
+        em[0]['title'] = request.json['title']
+    if 'body' in request.json:
+        em[0]['body'] = request.json['body']
 
-    if request.method == 'POST':
-        if Diary.delete_item(entry_id):
-            flash('You have successfully deleted an Item from the diary')
-            return redirect(url_for('diaryitems', entry_id=entry_id))
-    return render_template('deleteitem.html', diary=diary, item=item)
+    return jsonify({'entry':em[0], 'message': 'Entry updated.'}), 204
 
+@app.route('/api/v1/entries/<int:entry_id>',methods=['DELETE'])
+def deleteEntry(entry_id):
 
-@app.errorhandler(404)
-def page_not_found(e):
-    """
-    The page to return in case a route is not defined.
-    :param e: 
-    :return: 
-    """
-    return render_template('404.html'), 404
+    em = [ entry for entry in entryDB if (entry['entry_id'] == entry_id) ]
+    if len(em) == 0:
+       abort(404)
+    entryDB.remove(em[0])
+
+    return jsonify({'response':'Success', 'message': 'Entry deleted.'}), 202
