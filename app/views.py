@@ -3,8 +3,6 @@ from app import app
 from app.models import Diary
 from app.models import diaryItem
 
-application = Application()
-
 
 @app.route('/')
 @app.route('/home')
@@ -48,11 +46,11 @@ def diaryitems(entry_id):
     """
     if request.method == 'POST':
         if request.form['name']:
-            if diary.create_item(
+            if Diary.create_item(
                     diaryItem(application.generate_random_key(), request.form['name'], request.form['description'],
                                request.form['deadline'])):
                 flash("You have successfully added an Item to the diary")
-                return redirect(url_for('diaryitems', entry_id=diary.id))
+                return redirect(url_for('diaryitems', entry_id=entry_id))
         error = "Item cannot be created"
     return render_template('mydiaryitem.html', error=error, diary=diary, user=user)
 
@@ -66,13 +64,13 @@ def edititem(entry_id):
     :return: 
     """
 
-    item = diary.get_item(entry_id)
+    item = Diary.get_item(entry_id)
     if not item:
         return redirect(url_for('mydiary'))
 
     if request.method == 'POST':
         if request.form['name'] and request.form['description'] and request.form['deadline']:
-            if diary.update_item(entry_id, request.form['name'], request.form['description'],
+            if Diary.update_item(entry_id, request.form['name'], request.form['description'],
                                   request.form['deadline']):
                 flash("You have successfully updated your Item in the diary")
                 return redirect(url_for('diaryitems', entry_id=entry_id))
@@ -87,12 +85,12 @@ def deleteitem(entry_id):
     :param entry_id: 
     :return: 
     """
-    item = diary.get_item(entry_id)
+    item = Diary.get_item(entry_id)
     if not item:
         return redirect(url_for('mydiary'))
 
     if request.method == 'POST':
-        if diary.delete_item(entry_id):
+        if Diary.delete_item(entry_id):
             flash('You have successfully deleted an Item from the diary')
             return redirect(url_for('diaryitems', entry_id=entry_id))
     return render_template('deleteitem.html', diary=diary, item=item)
