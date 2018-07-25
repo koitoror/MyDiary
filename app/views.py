@@ -58,43 +58,43 @@ def diaryitems(entry_id):
 
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
-def edititem(item_id):
+def edititem(entry_id):
     """
     Route to edit an item specified by the Id
     :param entry_id: 
-    :param item_id: 
+    :param entry_id: 
     :return: 
     """
 
-    item = diary.get_item(item_id)
+    item = diary.get_item(entry_id)
     if not item:
         return redirect(url_for('mydiary'))
 
     if request.method == 'POST':
         if request.form['name'] and request.form['description'] and request.form['deadline']:
-            if diary.update_item(item_id, request.form['name'], request.form['description'],
+            if diary.update_item(entry_id, request.form['name'], request.form['description'],
                                   request.form['deadline']):
                 flash("You have successfully updated your Item in the diary")
-                return redirect(url_for('diaryitems', entry_id=item_id))
+                return redirect(url_for('diaryitems', entry_id=entry_id))
     return render_template('modifyitem.html', diary=diary, item=item)
 
 
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
-def deleteitem(item_id):
+def deleteitem(entry_id):
     """
     Route to delete an item from a diary specified by the Id.
     :param entry_id: 
-    :param item_id: 
+    :param entry_id: 
     :return: 
     """
-    item = diary.get_item(item_id)
+    item = diary.get_item(entry_id)
     if not item:
         return redirect(url_for('mydiary'))
 
     if request.method == 'POST':
-        if diary.delete_item(item_id):
+        if diary.delete_item(entry_id):
             flash('You have successfully deleted an Item from the diary')
-            return redirect(url_for('diaryitems', entry_id=item_id))
+            return redirect(url_for('diaryitems', entry_id=entry_id))
     return render_template('deleteitem.html', diary=diary, item=item)
 
 
