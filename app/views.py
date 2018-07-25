@@ -3,40 +3,6 @@ from app import app
 from app.models import Diary
 from app.models import diaryItem
 
-
-@app.route('/')
-@app.route('/home')
-def index():
-    """
-    This method returns the home page of the application
-    :return: 
-    """
-    return render_template('index.html')
-
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    """
-    This method shows the user the sign up page. It also signs up a user
-    if all the required attributes are present and then redirects the
-    user to their diary list
-    :return: 
-    """
-    return render_template('register.html', error=error)
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """
-    This method logins in an already existing user if their username and password
-    match those already stored.
-    It also shows errors to the user if their password is wrong or they do not 
-    already have an account.
-    :return: 
-    """
-    return render_template('login.html', error=error)
-
-
 @app.route('/api/v1/entries/<int:entry_id>', methods=['GET', 'POST'])
 def diaryitems(entry_id):
     """
@@ -94,16 +60,6 @@ def deleteitem(entry_id):
             flash('You have successfully deleted an Item from the diary')
             return redirect(url_for('diaryitems', entry_id=entry_id))
     return render_template('deleteitem.html', diary=diary, item=item)
-
-
-@app.route('/logout')
-def logout():
-    """
-    This methods clears the user session and logs the user out
-    :return: 
-    """
-    session.pop('username', None)
-    return redirect(url_for('login'))
 
 
 @app.errorhandler(404)
