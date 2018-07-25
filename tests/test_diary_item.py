@@ -3,7 +3,7 @@ from app.models import Diary
 from app.models import diaryItem
 
 
-class TestdiaryItems(unittest.TestCase):
+class TestDiaryItems(unittest.TestCase):
     def setUp(self):
         self.diary = Diary("Lorem ipsum dolor", "Hey")
 
